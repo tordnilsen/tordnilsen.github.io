@@ -43,35 +43,50 @@
             color: #666;
         }
         .week-container {
-            max-width: 600px; /* Gjør containeren smalere */
+            max-width: 600px;
             margin: auto;
-            padding: 15px; /* Reduserer padding for en mer kompakt følelse */
+            padding: 15px;
             background-color: #fff;
-            border: 2px solid #0073b1; /* Legger til en solid ramme for å forsterke det firkantede designet */
-            border-radius: 0; /* Fjerner avrundede hjørner */
+            border: 2px solid #0073b1;
+            border-radius: 0;
+            position: relative; /* Gjør det mulig å posisjonere knappen relativt til containeren */
         }
-        .week-title {
-            font-size: 16px; /* Mindre tekststørrelse */
-            text-align: left; /* Justerer tekst til venstre for en mer strukturert layout */
+        .week-title, .week-number {
+            font-size: 16px;
+            text-align: left;
+        }
+        .week-number {
+            margin-bottom: 10px; /* Gir litt plass mellom ukenummeret og nøkkelordene */
         }
         .keywords-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Bruker grid for en mer strukturert og firkantet layout */
-            gap: 5px; /* Mindre mellomrom mellom nøkkelordene */
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 5px;
             padding-top: 10px;
         }
         .keyword {
             background-color: #e1e9ee;
             color: #333;
-            padding: 5px; /* Mindre padding for et mer kompakt utseende */
-            border: 1px solid #ccc; /* Tilføyer en grense for å definere firkantene tydeligere */
+            padding: 5px;
+            border: 1px solid #ccc;
             text-align: center;
-            font-size: 14px; /* Mindre skriftstørrelse */
-        }
-        .week-number {
             font-size: 14px;
-            text-align: right; /* Plasserer ukenummeret til høyre for å utnytte plassen effektivt */
-            padding-top: 5px;
+        }
+        button {
+            background-color: #0073b1;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 0; /* Beholder den firkantede stilen */
+            position: absolute; /* Plasserer knappen mer strategisk */
+            top: 20px; /* Juster disse verdiene etter behov */
+            right: 20px; /* Juster disse verdiene etter behov */
+        }
+        button:hover {
+            background-color: #005fa3;
         }
    
     </style>
@@ -102,17 +117,13 @@
      
      
         <div class="week-container">
-            <h2 class="week-title">Keywords This Week (42)</h2>
+            <div class="week-title">Keywords for week 42</div>
+            <div class="week-number"><br></div>
             <div class="keywords-container">
                 <!-- Eksempel nøkkelord for uken -->
-                <span class="keyword">Project Planning</span>
-                <span class="keyword">Team Alignment</span>
-                <span class="keyword">OKR Review</span>
-                <span class="keyword">Product Launch</span>
-                <span class="keyword">Stakeholder Meeting</span>
+        
             </div>
-           
-            <button onclick="window.location.href='weekly-overview.html';" style="margin-top: 10px;">View Weekly Overview</button>
+            <button onclick="window.location.href='weekly-overview.html';">View Weekly Archive</button>
         </div>
 
         <div class="quote">
@@ -124,5 +135,28 @@
       
         <p> I can be reached on <a href="mailto:tord.nilsen@nasjonalmuseet.no">email</a> or <a href="https://www.linkedin.com/in/tord-nilsen-7377a9b3/">LinkedIn </a></p>
     </div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('activities.json')
+                .then(response => response.json())
+                .then(data => {
+                    const weekNumber = document.querySelector('.week-number');
+                    weekNumber.textContent = `Week ${data.week}`;
+    
+                    const keywordsContainer = document.querySelector('.keywords-container');
+                    keywordsContainer.innerHTML = ''; // Tømmer containeren for eksisterende innhold
+                    data.keywords.forEach(keyword => {
+                        const keywordElement = document.createElement('div');
+                        keywordElement.className = 'keyword';
+                        keywordElement.textContent = keyword;
+                        keywordsContainer.appendChild(keywordElement);
+                    });
+                })
+                .catch(error => console.error('Error loading activities:', error));
+        });
+    </script>
 </body>
 </html>
